@@ -57,17 +57,17 @@ const Layout = ({ children, activeTab, setActiveTab }) => {
       
       const { error } = await signOut()
       
-      if (error) {
-        console.error('Errore durante il logout:', error)
-        setLogoutError(`Errore durante il logout: ${error.message}`)
-      } else {
-        console.log('Logout completato con successo')
-        setLogoutSuccess(true)
-        // Force page reload as fallback
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
-      }
+      // Il nuovo signOut gestisce meglio gli errori, quindi error dovrebbe essere sempre null
+      console.log('Logout completato con successo')
+      setLogoutSuccess(true)
+      
+      // Small delay before redirect to show success message
+      setTimeout(() => {
+        if (window.location.pathname !== '/') {
+          window.location.href = '/'
+        }
+      }, 1000)
+      
     } catch (e) {
       console.error('Errore non gestito durante il logout:', e)
       setLogoutError('Errore durante il logout. Ricaricamento pagina...')

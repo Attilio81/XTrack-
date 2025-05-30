@@ -67,30 +67,60 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     try {
       setLoading(true)
-      console.log('Iniziando logout...')
+      console.log('Avviando processo di logout...')
       
-      // Clear local storage data
+      // Clear all local storage data first
+      const keysToRemove = []
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (key && key.startsWith('sb-')) {
+          keysToRemove.push(key)
+        }
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key))
       localStorage.removeItem('supabase.auth.token')
       
-      const { error } = await supabase.auth.signOut()
+      // Force user state reset immediately
+      setUser(null)
       
-      if (error) {
-        console.error('Errore durante il logout:', error)
-        return { error }
+      // Try to sign out from Supabase, but don't fail if session is missing
+      try {
+        const { error } = await supabase.auth.signOut({ scope: 'local' })
+        if (error && error.message !== 'Auth session missing!') {
+          console.warn('Warning durante il logout Supabase:', error.message)
+        }
+      } catch (authError) {
+        // Ignore auth session errors - user is already logged out locally
+        if (!authError.message?.includes('Auth session missing')) {
+          console.warn('Warning durante il logout Supabase:', authError.message)
+        }
       }
       
-      // Force user state reset
-      setUser(null)
       console.log('Logout completato con successo')
-      
       return { error: null }
+      
     } catch (e) {
       console.error('Errore non gestito durante il logout:', e)
       // Force logout even if there's an error
       setUser(null)
-      return { error: e }
+      
+      // Clear storage as fallback
+      try {
+        localStorage.clear()
+      } catch (storageError) {
+        console.warn('Impossibile pulire localStorage:', storageError)
+      }
+      
+      return { error: null } // Always return success for user experience
     } finally {
       setLoading(false)
+      
+      // Optional: force page reload as ultimate fallback
+      setTimeout(() => {
+        if (window.location.pathname !== '/') {
+          window.location.href = '/'
+        }
+      }, 100)
     }
   }
 
