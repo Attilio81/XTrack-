@@ -1,0 +1,40 @@
+{
+  "name": "XTrack - CrossFit Tracker",
+  "short_name": "XTrack",
+  "description": "Track your CrossFit workouts, benchmarks, and strength progress",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFD700",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icona.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icona.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/icona.jpeg",
+      "sizes": "144x144",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/icona.jpeg",
+      "sizes": "96x96",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["fitness", "health", "sports"],
+  "lang": "it",
+  "scope": "/",
+  "prefer_related_applications": false
+}
