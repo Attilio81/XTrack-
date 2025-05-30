@@ -1,26 +1,58 @@
 import { useState } from 'react'
-import './App.css'
+import { AuthProvider, useAuth } from './hooks/useAuth'
+import AuthForm from './components/AuthForm'
+import Layout from './components/Layout'
+import Dashboard from './pages/Dashboard'
+import Benchmarks from './pages/Benchmarks'
+import Strength from './pages/Strength'
+import BodyMetrics from './pages/BodyMetrics'
+import Statistics from './pages/Statistics'
 
-function App() {
-  const [count, setCount] = useState(0)
+const AppContent = () => {
+  const { user, loading } = useAuth()
+  const [activeTab, setActiveTab] = useState('dashboard')
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-white text-xl">Caricamento...</div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <AuthForm />
+  }
+
+  const renderPage = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <Dashboard />
+      case 'benchmarks':
+        return <Benchmarks />
+      case 'strength':
+        return <Strength />
+      case 'body':
+        return <BodyMetrics />
+      case 'stats':
+        return <Statistics />
+      default:
+        return <Dashboard />
+    }
+  }
 
   return (
-    <>
-      <div className="app-container">
-        <h1>XTrack</h1>
-        <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </div>
-    </>
+    <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
+      {renderPage()}
+    </Layout>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
 
