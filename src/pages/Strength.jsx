@@ -19,7 +19,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  IconButton
+  IconButton,
+  Chip
 } from '@mui/material'
 import { 
   FitnessCenter as DumbbellIcon, 
@@ -45,6 +46,7 @@ const Strength = () => {
   const [showEditForm, setShowEditForm] = useState(false)
   const [editingRecord, setEditingRecord] = useState(null)
   const [selectedExercise, setSelectedExercise] = useState('')
+  const [showCompletedOnly, setShowCompletedOnly] = useState(false)
   const [loading, setLoading] = useState(true)
   
   const [strengthForm, setStrengthForm] = useState({
@@ -208,10 +210,17 @@ const Strength = () => {
 
   const getAllExercises = () => {
     const uniqueExercises = [...new Set(records.map(r => r.exercise))]
-    return uniqueExercises.map(exercise => ({
+    let allExercises = uniqueExercises.map(exercise => ({
       exercise,
       ...getExerciseData(exercise)
     }))
+
+    // Filter for completed exercises only (exercises with records)
+    if (showCompletedOnly) {
+      allExercises = allExercises.filter(exercise => exercise.records.length > 0)
+    }
+
+    return allExercises
   }
 
   const mainExercises = getMainExercises()
@@ -252,6 +261,76 @@ const Strength = () => {
           Aggiungi Record
         </Button>
       </Box>
+
+      {/* Quick Stats */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid size={{ xs: 6, md: 3 }}>
+          <MetricCard
+            title="Esercizi"
+            value={[...new Set(records.map(r => r.exercise))].length}
+            icon={DumbbellIcon}
+            gradient="primary"
+          />
+        </Grid>
+        <Grid size={{ xs: 6, md: 3 }}>
+          <MetricCard
+            title="Records Totali"
+            value={records.length}
+            icon={TrophyIcon}
+            gradient="secondary"
+          />
+        </Grid>
+        <Grid size={{ xs: 6, md: 3 }}>
+          <MetricCard
+            title="Alzate Principali"
+            value={mainExercises.length}
+            icon={BarChart3Icon}
+            gradient="success"
+          />
+        </Grid>
+        <Grid size={{ xs: 6, md: 3 }}>
+          <MetricCard
+            title="Completati"
+            value={[...new Set(records.map(r => r.exercise))].length}
+            icon={TargetIcon}
+            gradient={showCompletedOnly ? "primary" : "warning"}
+            onClick={() => setShowCompletedOnly(!showCompletedOnly)}
+            subtitle={showCompletedOnly ? "Filtro attivo" : "Clicca per filtrare"}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Active Filters Indicator */}
+      {showCompletedOnly && (
+        <Box sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+            Filtri attivi:
+          </Typography>
+          <Chip
+            label="Solo Completati"
+            size="small"
+            onDelete={() => setShowCompletedOnly(false)}
+            sx={{
+              backgroundColor: colors.primary.main,
+              color: 'black',
+              '& .MuiChip-deleteIcon': {
+                color: 'black'
+              }
+            }}
+          />
+          <Button
+            size="small"
+            onClick={() => setShowCompletedOnly(false)}
+            sx={{
+              color: colors.text.secondary,
+              fontSize: '0.75rem',
+              textTransform: 'none'
+            }}
+          >
+            Cancella filtri
+          </Button>
+        </Box>
+      )}
 
       {/* Main Lifts Progress */}
       {mainExercises.length > 0 && (
@@ -330,18 +409,44 @@ const Strength = () => {
             <Box textAlign="center" py={4}>
               <DumbbellIcon sx={{ fontSize: 48, color: colors.text.secondary, mb: 2 }} />
               <Typography variant="body1" sx={{ color: colors.text.secondary, mb: 2 }}>
-                Nessun record di forza registrato
+                {showCompletedOnly 
+                  ? 'Nessun esercizio completato' 
+                  : 'Nessun record di forza registrato'
+                }
               </Typography>
-              <Button
-                onClick={() => setShowForm(true)}
-                variant="contained"
-                sx={{
-                  backgroundColor: colors.primary.main,
-                  '&:hover': { backgroundColor: colors.primary.dark }
-                }}
-              >
-                Aggiungi il tuo primo record
-              </Button>
+              <Typography variant="body2" sx={{ color: colors.text.secondary, mb: 2 }}>
+                {showCompletedOnly 
+                  ? 'Aggiungi il tuo primo record per vedere gli esercizi qui!'
+                  : 'Aggiungi il tuo primo record per iniziare.'
+                }
+              </Typography>
+              {showCompletedOnly ? (
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowCompletedOnly(false)}
+                  sx={{
+                    borderColor: colors.primary.main,
+                    color: colors.primary.main,
+                    '&:hover': {
+                      backgroundColor: `${colors.primary.main}10`,
+                      borderColor: colors.primary.main
+                    }
+                  }}
+                >
+                  Mostra tutti gli esercizi
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setShowForm(true)}
+                  variant="contained"
+                  sx={{
+                    backgroundColor: colors.primary.main,
+                    '&:hover': { backgroundColor: colors.primary.dark }
+                  }}
+                >
+                  Aggiungi il tuo primo record
+                </Button>
+              )}
             </Box>
           ) : (
             <Grid container spacing={2}>

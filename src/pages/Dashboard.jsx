@@ -164,6 +164,7 @@ const Dashboard = () => {
             icon={DumbbellIcon}
             trend="up"
             trendValue="+5"
+            gradient={true}
           />
         </Grid>
 
@@ -172,7 +173,9 @@ const Dashboard = () => {
             title="WODs Recenti"
             value={stats.recentActivity.length}
             icon={TargetIcon}
-            trend="flat"
+            trend="up"
+            trendValue="+3"
+            gradient={true}
           />
         </Grid>
 
@@ -183,6 +186,7 @@ const Dashboard = () => {
             icon={TrendingUpIcon}
             trend="up"
             trendValue="+2"
+            gradient={true}
           />
         </Grid>
       </Grid>
