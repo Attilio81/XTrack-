@@ -5,6 +5,7 @@ import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Benchmarks from './pages/Benchmarks'
 import Strength from './pages/Strength'
+import Cardio from './pages/Cardio'
 import BodyMetrics from './pages/BodyMetrics'
 import Statistics from './pages/Statistics'
 
@@ -23,7 +24,6 @@ const AppContent = () => {
   if (!user) {
     return <AuthForm />
   }
-
   const renderPage = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -32,6 +32,8 @@ const AppContent = () => {
         return <Benchmarks />
       case 'strength':
         return <Strength />
+      case 'cardio':
+        return <Cardio />
       case 'body':
         return <BodyMetrics />
       case 'stats':

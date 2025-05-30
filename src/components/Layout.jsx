@@ -29,7 +29,8 @@ import {
   BarChart as BarChartIcon,
   Menu as MenuIcon,
   Logout as LogoutIcon,
-  TrackChanges as TargetIcon
+  TrackChanges as TargetIcon,
+  DirectionsRun as CardioIcon
 } from '@mui/icons-material'
 import { colors, commonStyles } from '../theme'
 
@@ -44,6 +45,7 @@ const Layout = ({ children, activeTab, setActiveTab }) => {
     { id: 'dashboard', name: 'Dashboard', icon: HomeIcon },
     { id: 'benchmarks', name: 'Benchmarks', icon: TargetIcon },
     { id: 'strength', name: 'Strength', icon: FitnessCenterIcon },
+    { id: 'cardio', name: 'Cardio', icon: CardioIcon },
     { id: 'body', name: 'Body Metrics', icon: PersonIcon },
     { id: 'stats', name: 'Statistics', icon: BarChartIcon },
   ]

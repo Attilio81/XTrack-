@@ -35,6 +35,7 @@ import {
   Close as CloseIcon
 } from '@mui/icons-material'
 import { colors, commonStyles } from '../theme'
+import { logger } from '../utils/logger'
 
 const AuthForm = () => {
   const { signIn, signUp } = useAuth()
@@ -93,7 +94,7 @@ const AuthForm = () => {
         }
       }
     } catch (err) {
-      console.error('Errore durante l\'autenticazione:', err)
+      logger.error('Errore durante l\'autenticazione:', err)
       setError(err.message || 'Si è verificato un errore durante l\'operazione')
     } finally {
       setLoading(false)

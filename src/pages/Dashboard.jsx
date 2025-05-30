@@ -23,17 +23,21 @@ import {
   Insights as TrendingUpIcon,
   TrackChanges as TargetIcon,
   AccessTime as ClockIcon,
-  Add as AddIcon
+  Add as AddIcon,
+  DirectionsRun as CardioIcon
 } from '@mui/icons-material'
 import { colors, commonStyles } from '../theme'
 import MetricCard from '../components/MetricCard'
 import ProgressRing from '../components/ProgressRing'
+import { logger } from '../utils/logger'
 
 const Dashboard = () => {
   const { user } = useAuth()
+  
   const [stats, setStats] = useState({
     totalPRs: 0,
     strengthPRs: 0,
+    cardioPRs: 0,
     recentActivity: [],
     strengthProgress: []
   })
@@ -57,9 +61,7 @@ const Dashboard = () => {
         .from('strength_records')
         .select('*')
         .eq('is_pr', true)
-        .eq('user_id', user.id)
-
-      // Get recent activity
+        .eq('user_id', user.id)      // Get recent activity
       const { data: recentBenchmarks } = await supabase
         .from('benchmark_results')
         .select(`
@@ -77,6 +79,18 @@ const Dashboard = () => {
         .order('created_at', { ascending: false })
         .limit(5)
 
+      const { data: recentCardio } = await supabase
+        .from('cardio_activities')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5)      // Get cardio PRs
+      const { data: cardioPRs } = await supabase
+        .from('cardio_activities')
+        .select('*')
+        .eq('is_pr', true)
+        .eq('user_id', user.id)
+
       // Combine and sort recent activity
       const allActivity = [
         ...recentBenchmarks.map(item => ({
@@ -89,10 +103,14 @@ const Dashboard = () => {
           ...item,
           type: 'strength',
           name: item.exercise
+        })),
+        ...recentCardio.map(item => ({
+          ...item,
+          type: 'cardio',
+          name: item.name,
+          result: item.distance_km ? `${item.distance_km} km` : `${item.duration_minutes}min`
         }))
-      ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5)
-
-      // Get strength progress data
+      ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5)      // Get strength progress data
       const { data: strengthData } = await supabase
         .from('strength_records')
         .select('exercise, estimated_1rm')
@@ -112,13 +130,13 @@ const Dashboard = () => {
         })
 
       setStats({
-        totalPRs: (benchmarkPRs?.length || 0) + (strengthPRs?.length || 0),
+        totalPRs: (benchmarkPRs?.length || 0) + (strengthPRs?.length || 0) + (cardioPRs?.length || 0),
         strengthPRs: strengthPRs?.length || 0,
+        cardioPRs: cardioPRs?.length || 0,
         recentActivity: allActivity,
         strengthProgress
-      })
-    } catch (error) {
-      console.error('Error loading dashboard:', error)
+      })    } catch (error) {
+      logger.error('Error loading dashboard:', error)
     } finally {
       setLoading(false)
     }
@@ -166,13 +184,11 @@ const Dashboard = () => {
             trendValue="+5"
             gradient={true}
           />
-        </Grid>
-
-        <Grid size={{ xs: 6, md: 3 }}>
+        </Grid>        <Grid size={{ xs: 6, md: 3 }}>
           <MetricCard
-            title="WODs Recenti"
-            value={stats.recentActivity.length}
-            icon={TargetIcon}
+            title="Cardio PRs"
+            value={stats.cardioPRs}
+            icon={CardioIcon}
             trend="up"
             trendValue="+3"
             gradient={true}
@@ -258,13 +274,14 @@ const Dashboard = () => {
                     }}
                   >
                     <ListItemIcon sx={{ minWidth: 40 }}>
-                      <Box
-                        sx={{
+                      <Box                        sx={{
                           width: 32,
                           height: 32,
                           borderRadius: '50%',
                           backgroundColor: activity.type === 'benchmark' 
                             ? `${colors.secondary.main}15` 
+                            : activity.type === 'cardio'
+                            ? `${colors.secondary.light}15`
                             : `${colors.primary.main}15`,
                           display: 'flex',
                           alignItems: 'center',
@@ -275,6 +292,11 @@ const Dashboard = () => {
                           <TargetIcon sx={{ 
                             fontSize: 16, 
                             color: colors.secondary.main 
+                          }} />
+                        ) : activity.type === 'cardio' ? (
+                          <CardioIcon sx={{ 
+                            fontSize: 16, 
+                            color: colors.secondary.light 
                           }} />
                         ) : (
                           <DumbbellIcon sx={{ 
@@ -312,9 +334,8 @@ const Dashboard = () => {
                                 fontWeight: 'bold'
                               }}
                             />
-                          )}
-                          <Chip
-                            label={activity.type === 'benchmark' ? 'WOD' : 'Strength'}
+                          )}                          <Chip
+                            label={activity.type === 'benchmark' ? 'WOD' : activity.type === 'cardio' ? 'Cardio' : 'Strength'}
                             size="small"
                             variant="outlined"
                             sx={{
@@ -322,9 +343,13 @@ const Dashboard = () => {
                               height: 18,
                               borderColor: activity.type === 'benchmark' 
                                 ? colors.secondary.main 
+                                : activity.type === 'cardio'
+                                ? colors.secondary.light
                                 : colors.primary.main,
                               color: activity.type === 'benchmark' 
                                 ? colors.secondary.main 
+                                : activity.type === 'cardio'
+                                ? colors.secondary.light
                                 : colors.primary.main
                             }}
                           />
@@ -340,9 +365,10 @@ const Dashboard = () => {
                               color: 'text.secondary',
                               lineHeight: 1.4
                             }}
-                          >
-                            {activity.type === 'benchmark' 
+                          >                            {activity.type === 'benchmark' 
                               ? `${activity.result || activity.score} ${activity.unit || ''}`
+                              : activity.type === 'cardio'
+                              ? `${activity.result || activity.duration_minutes + 'min'}`
                               : `${activity.weight} kg × ${activity.reps} reps${activity.estimated_1rm ? ` (1RM: ${activity.estimated_1rm}kg)` : ''}`}
                           </Box>
                           <Box 

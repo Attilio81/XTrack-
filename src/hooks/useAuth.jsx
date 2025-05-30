@@ -1,6 +1,7 @@
 
 import { useState, useEffect, createContext, useContext } from 'react'
 import { supabase } from '../lib/supabase'
+import { logger } from '../utils/logger'
 
 const AuthContext = createContext({})
 
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session)
+        logger.info('Auth state changed:', event, session)
         setUser(session?.user ?? null)
         setLoading(false)
       }
@@ -53,13 +54,13 @@ export const AuthProvider = ({ children }) => {
       })
       
       if (error) {
-        console.error('Errore durante la registrazione:', error)
+        logger.error('Errore durante la registrazione:', error)
         return { data, error }
       }
       
       return { data, error: null }
     } catch (e) {
-      console.error('Errore non gestito durante la registrazione:', e)
+      logger.error('Errore non gestito durante la registrazione:', e)
       return { data: null, error: e }
     }
   }
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     try {
       setLoading(true)
-      console.log('Avviando processo di logout...')
+      logger.info('Avviando processo di logout...')
       
       // Clear all local storage data first
       const keysToRemove = []
@@ -87,20 +88,20 @@ export const AuthProvider = ({ children }) => {
       try {
         const { error } = await supabase.auth.signOut({ scope: 'local' })
         if (error && error.message !== 'Auth session missing!') {
-          console.warn('Warning durante il logout Supabase:', error.message)
+          logger.warn('Warning durante il logout Supabase:', error.message)
         }
       } catch (authError) {
         // Ignore auth session errors - user is already logged out locally
         if (!authError.message?.includes('Auth session missing')) {
-          console.warn('Warning durante il logout Supabase:', authError.message)
+          logger.warn('Warning durante il logout Supabase:', authError.message)
         }
       }
       
-      console.log('Logout completato con successo')
+      logger.info('Logout completato con successo')
       return { error: null }
       
     } catch (e) {
-      console.error('Errore non gestito durante il logout:', e)
+      logger.error('Errore non gestito durante il logout:', e)
       // Force logout even if there's an error
       setUser(null)
       
@@ -108,7 +109,7 @@ export const AuthProvider = ({ children }) => {
       try {
         localStorage.clear()
       } catch (storageError) {
-        console.warn('Impossibile pulire localStorage:', storageError)
+        logger.warn('Impossibile pulire localStorage:', storageError)
       }
       
       return { error: null } // Always return success for user experience
