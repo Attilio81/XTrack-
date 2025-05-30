@@ -65,8 +65,33 @@ export const AuthProvider = ({ children }) => {
   }
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    return { error }
+    try {
+      setLoading(true)
+      console.log('Iniziando logout...')
+      
+      // Clear local storage data
+      localStorage.removeItem('supabase.auth.token')
+      
+      const { error } = await supabase.auth.signOut()
+      
+      if (error) {
+        console.error('Errore durante il logout:', error)
+        return { error }
+      }
+      
+      // Force user state reset
+      setUser(null)
+      console.log('Logout completato con successo')
+      
+      return { error: null }
+    } catch (e) {
+      console.error('Errore non gestito durante il logout:', e)
+      // Force logout even if there's an error
+      setUser(null)
+      return { error: e }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

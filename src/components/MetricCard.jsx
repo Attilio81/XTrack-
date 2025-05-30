@@ -41,22 +41,35 @@ const MetricCard = ({
         return colors.text.secondary;
     }
   };
+  const cardBaseStyle = {
+    backgroundColor: colors.background.card,
+    border: '1px solid rgba(0, 0, 0, 0.1)',
+    borderRadius: 2,
+    transition: 'all 0.2s ease-in-out',
+    '&:hover': {
+      backgroundColor: colors.background.cardHover,
+      borderColor: 'rgba(255, 215, 0, 0.5)',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+      transform: 'translateY(-2px)',
+    },
+  };
 
-  const cardStyle = gradient 
-    ? commonStyles.gradientCard 
-    : commonStyles.metricCard;
+  const gradientCardStyle = {
+    background: `linear-gradient(135deg, ${color} 0%, ${colors.primary.light} 100%)`,
+    color: '#000',
+    border: 'none',
+    '&:hover': {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 25px rgba(255, 215, 0, 0.4)',
+    },
+  };
 
-  return (
-    <Card
+  const cardStyle = gradient ? gradientCardStyle : cardBaseStyle;
+
+  return (    <Card
       sx={{
         ...cardStyle,
         cursor: onClick ? 'pointer' : 'default',
-        '&:hover': {
-          ...cardStyle['&:hover'],
-          ...(onClick && {
-            cursor: 'pointer',
-          }),
-        },
       }}
       onClick={onClick}
       {...props}
@@ -69,16 +82,24 @@ const MetricCard = ({
             alignItems: 'center',
             gap: 2,
             textAlign: 'center',
-          }}
-        >
+          }}        >
           {/* Icon */}
           {Icon && (
             <Box
               sx={{
-                ...commonStyles.iconContainer,
                 backgroundColor: gradient 
                   ? 'rgba(0, 0, 0, 0.1)' 
                   : 'rgba(255, 215, 0, 0.1)',
+                color: gradient ? '#000' : colors.primary.main,
+                width: 56,
+                height: 56,
+                borderRadius: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: gradient 
+                  ? 'none' 
+                  : '0 4px 12px rgba(255, 215, 0, 0.3)',
               }}
             >
               <Icon 

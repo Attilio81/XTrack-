@@ -297,250 +297,68 @@ export { colors };
 
 // Componenti comuni riutilizzabili
 export const commonStyles = {
-  // Stile per le card con sfondo bianco
+  // Glass effect for cards
   glassCard: {
-    backgroundColor: colors.background.card,
-    borderRadius: theme.shape.borderRadius,
-    border: '1px solid rgba(0, 0, 0, 0.1)',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-    transition: 'all 0.2s ease-in-out',
-    '&:hover': {
-      backgroundColor: colors.background.cardHover,
-      borderColor: 'rgba(255, 215, 0, 0.5)',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
-      transform: 'translateY(-2px)',
-    },
-  },
-
-  // Stile per card con gradiente
-  gradientCard: {
-    background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)',
-    borderRadius: theme.shape.borderRadius,
-    border: 'none',
-    boxShadow: '0 4px 20px rgba(255, 215, 0, 0.3)',
-    color: '#000',
-    transition: 'all 0.3s ease-in-out',
-    '&:hover': {
-      boxShadow: '0 8px 30px rgba(255, 215, 0, 0.4)',
-      transform: 'translateY(-4px)',
-    },
-  },
-
-  // Stile per card statistiche con animazioni
-  statCard: {
-    backgroundColor: colors.background.card,
-    borderRadius: theme.shape.borderRadius,
-    border: '1px solid rgba(0, 0, 0, 0.1)',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    position: 'relative',
-    overflow: 'hidden',
-    '&:hover': {
-      backgroundColor: colors.background.cardHover,
-      borderColor: 'rgba(255, 215, 0, 0.5)',
-      boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-      transform: 'translateY(-2px)',
-    },
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      height: '3px',
-      background: 'linear-gradient(90deg, #FFD700, #FFC107)',
-      opacity: 0,
-      transition: 'opacity 0.3s ease',
-    },
-    '&:hover::before': {
-      opacity: 1,
-    },
-  },
-
-  // Stile per progress circles
-  progressCircle: {
-    position: 'relative',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  // Stile per icon containers con hover effect
-  iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: '50%',
-    backgroundColor: 'rgba(255, 215, 0, 0.1)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: 2,
     transition: 'all 0.3s ease',
     '&:hover': {
-      backgroundColor: 'rgba(255, 215, 0, 0.2)',
-      transform: 'scale(1.1)',
-    },
-  },
-  
-  // Stile per i layout di pagina
-  pageContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-    marginBottom: theme.spacing(4),
-    padding: theme.spacing(3),
-  },
-  
-  // Stile per le intestazioni delle pagine
-  pageHeader: {
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2, 0),
-    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-  },
-  
-  // Stile per le griglie di card
-  cardsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: theme.spacing(3),
-  },
-  
-  // Stile per le metriche principali
-  metricCard: {
-    padding: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: theme.spacing(2),
-    textAlign: 'center',
-    background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%)',
-    border: '1px solid rgba(255, 215, 0, 0.2)',
-    borderRadius: theme.shape.borderRadius,
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%)',
-      border: '1px solid rgba(255, 215, 0, 0.4)',
-      transform: 'translateY(-2px)',
-      boxShadow: '0 8px 25px rgba(255, 215, 0, 0.2)',
-    },
-  },
-
-  // Stile per charts container
-  chartContainer: {
-    backgroundColor: colors.background.card,
-    borderRadius: theme.shape.borderRadius,
-    border: '1px solid rgba(0, 0, 0, 0.1)',
-    padding: theme.spacing(3),
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
       borderColor: 'rgba(255, 215, 0, 0.3)',
     },
   },
 
-  // Progress visualization card
-  progressCard: {
-    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 215, 0, 0.1)',
-    borderRadius: theme.shape.borderRadius * 2,
-    padding: theme.spacing(3),
-    textAlign: 'center',
+  // Action button style
+  actionButton: {
+    borderRadius: 2,
+    textTransform: 'none',
+    fontWeight: 600,
     transition: 'all 0.3s ease',
     '&:hover': {
-      transform: 'translateY(-4px)',
-      boxShadow: '0 12px 30px rgba(255, 215, 0, 0.15)',
-      border: '1px solid rgba(255, 215, 0, 0.3)',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     },
   },
 
-  // Enhanced metric visualization
-  metricVisualization: {
+  // Icon container
+  iconContainer: {
+    backgroundColor: colors.primary.main,
+    color: '#000',
+    width: 56,
+    height: 56,
+    borderRadius: 2,
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
-    gap: theme.spacing(1),
-    padding: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius,
-    background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.03) 0%, transparent 100%)',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.02) 100%)',
-    },
+    justifyContent: 'center',
+    boxShadow: '0 4px 12px rgba(255, 215, 0, 0.3)',
   },
-  
-  // Stile per i form
+
+  // Form styling
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2),
-  },
-  
-  // Stile per i pulsanti d'azione principali
-  actionButton: {
-    borderRadius: theme.shape.borderRadius,
-    fontWeight: 600,
-    padding: theme.spacing(1.5, 3),
-    textTransform: 'none',
-    boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
-    transition: 'all 0.3s ease',
-    '&:hover': {
-      boxShadow: '0 4px 15px rgba(255, 215, 0, 0.4)',
-      transform: 'translateY(-1px)',
-    },
+    gap: 3,
   },
 
-  // Stile per floating action buttons
-  fab: {
-    position: 'fixed',
-    bottom: theme.spacing(3),
-    right: theme.spacing(3),
-    background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)',
-    color: '#000',
-    boxShadow: '0 4px 20px rgba(255, 215, 0, 0.4)',
-    '&:hover': {
-      background: 'linear-gradient(135deg, #FFC107 0%, #FFB300 100%)',
-      boxShadow: '0 6px 25px rgba(255, 215, 0, 0.5)',
-      transform: 'scale(1.05)',
-    },
-  },
-  
-  // Stile per i modali
+  // Modal styling
   modal: {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    backgroundColor: colors.background.paper,
-    borderRadius: theme.shape.borderRadius,
-    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-    padding: theme.spacing(4),
-    maxWidth: '90vw',
+    borderRadius: 2,
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+    p: 4,
     maxHeight: '90vh',
     overflow: 'auto',
-    border: '1px solid rgba(255, 215, 0, 0.2)',
   },
 
-  // Stile per le animazioni di loading
-  pulse: {
-    animation: 'pulse 1.5s ease-in-out infinite',
-    '@keyframes pulse': {
-      '0%': {
-        opacity: 1,
-      },
-      '50%': {
-        opacity: 0.5,
-      },
-      '100%': {
-        opacity: 1,
-      },
-    },
-  },
-
-  // Stile per badge di stato
+  // Status badge
   statusBadge: {
-    padding: theme.spacing(0.5, 1.5),
-    borderRadius: theme.spacing(3),
+    padding: '4px 12px',
+    borderRadius: 20,
     fontSize: '0.75rem',
     fontWeight: 600,
     textTransform: 'uppercase',

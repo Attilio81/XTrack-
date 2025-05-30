@@ -285,11 +285,21 @@ const Dashboard = () => {
                       </Box>
                     </ListItemIcon>
                     <ListItemText
+                      primaryTypographyProps={{ component: 'div' }}
+                      secondaryTypographyProps={{ component: 'div' }}
                       primary={
                         <Box display="flex" alignItems="center" gap={1}>
-                          <Typography variant="subtitle1" color="text.primary" fontWeight={600}>
+                          <Box 
+                            component="span"
+                            sx={{ 
+                              fontSize: '1rem',
+                              fontWeight: 600,
+                              color: 'text.primary',
+                              lineHeight: 1.5
+                            }}
+                          >
                             {activity.name}
-                          </Typography>
+                          </Box>
                           {activity.is_pr && (
                             <Chip
                               label="PR"
@@ -322,12 +332,28 @@ const Dashboard = () => {
                       }
                       secondary={
                         <Box mt={0.5}>
-                          <Typography variant="body2" color="text.secondary" fontWeight={500}>
+                          <Box 
+                            component="div"
+                            sx={{ 
+                              fontSize: '0.875rem',
+                              fontWeight: 500,
+                              color: 'text.secondary',
+                              lineHeight: 1.4
+                            }}
+                          >
                             {activity.type === 'benchmark' 
                               ? `${activity.result || activity.score} ${activity.unit || ''}`
                               : `${activity.weight} kg × ${activity.reps} reps${activity.estimated_1rm ? ` (1RM: ${activity.estimated_1rm}kg)` : ''}`}
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
+                          </Box>
+                          <Box 
+                            component="div"
+                            sx={{ 
+                              fontSize: '0.75rem',
+                              color: 'text.secondary',
+                              lineHeight: 1.3,
+                              mt: 0.25
+                            }}
+                          >
                             {new Date(activity.created_at).toLocaleDateString('it-IT', {
                               weekday: 'short',
                               day: 'numeric',
@@ -336,7 +362,7 @@ const Dashboard = () => {
                               minute: '2-digit'
                             })}
                             {activity.category && ` • ${activity.category}`}
-                          </Typography>
+                          </Box>
                         </Box>
                       }
                     />

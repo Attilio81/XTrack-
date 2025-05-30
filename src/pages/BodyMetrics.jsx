@@ -440,38 +440,75 @@ const BodyMetrics = () => {
                 <Typography variant="body1" color="text.secondary" textAlign="center" py={4}>
                   Nessuna metrica registrata. Inizia a tracciare i tuoi progressi!
                 </Typography>
-              ) : (
-                <List>
+              ) : (                <List>
                   {metrics.slice(0, 5).map((metric, index) => (
                     <Box key={metric.id}>
                       <ListItem>
                         <ListItemText
+                          primaryTypographyProps={{ component: 'div' }}
+                          secondaryTypographyProps={{ component: 'div' }}
                           primary={
-                            <Typography variant="subtitle1" color="text.primary">
+                            <Box 
+                              component="div"
+                              sx={{ 
+                                fontSize: '1rem',
+                                fontWeight: 400,
+                                color: 'text.primary',
+                                lineHeight: 1.5
+                              }}
+                            >
                               {new Date(metric.date).toLocaleDateString('it-IT')}
-                            </Typography>
+                            </Box>
                           }
                           secondary={
                             <Box display="flex" flexWrap="wrap" gap={2} mt={1}>
                               {metric.weight && (
-                                <Typography variant="body2" color="text.secondary">
+                                <Box 
+                                  component="span"
+                                  sx={{ 
+                                    fontSize: '0.875rem',
+                                    color: 'text.secondary',
+                                    lineHeight: 1.4
+                                  }}
+                                >
                                   Peso: {metric.weight}kg
-                                </Typography>
+                                </Box>
                               )}
                               {metric.body_fat_percent && (
-                                <Typography variant="body2" color="text.secondary">
+                                <Box 
+                                  component="span"
+                                  sx={{ 
+                                    fontSize: '0.875rem',
+                                    color: 'text.secondary',
+                                    lineHeight: 1.4
+                                  }}
+                                >
                                   BF: {metric.body_fat_percent}%
-                                </Typography>
+                                </Box>
                               )}
                               {metric.resting_hr && (
-                                <Typography variant="body2" color="text.secondary">
+                                <Box 
+                                  component="span"
+                                  sx={{ 
+                                    fontSize: '0.875rem',
+                                    color: 'text.secondary',
+                                    lineHeight: 1.4
+                                  }}
+                                >
                                   FC: {metric.resting_hr}bpm
-                                </Typography>
+                                </Box>
                               )}
                               {metric.vo2_max && (
-                                <Typography variant="body2" color="text.secondary">
+                                <Box 
+                                  component="span"
+                                  sx={{ 
+                                    fontSize: '0.875rem',
+                                    color: 'text.secondary',
+                                    lineHeight: 1.4
+                                  }}
+                                >
                                   VO2: {metric.vo2_max}
-                                </Typography>
+                                </Box>
                               )}
                             </Box>
                           }
@@ -534,14 +571,23 @@ const BodyMetrics = () => {
                       calf_cm: 'Polpaccio'
                     }
                     
-                    return (
-                      <Box key={measurement.id}>
+                    return (                      <Box key={measurement.id}>
                         <ListItem>
                           <ListItemText
+                            primaryTypographyProps={{ component: 'div' }}
+                            secondaryTypographyProps={{ component: 'div' }}
                             primary={
-                              <Typography variant="subtitle1" color="text.primary">
+                              <Box 
+                                component="div"
+                                sx={{ 
+                                  fontSize: '1rem',
+                                  fontWeight: 400,
+                                  color: 'text.primary',
+                                  lineHeight: 1.5
+                                }}
+                              >
                                 {new Date(measurement.date).toLocaleDateString('it-IT')}
-                              </Typography>
+                              </Box>
                             }
                             secondary={
                               <Box display="flex" flexWrap="wrap" gap={2} mt={1}>
@@ -549,9 +595,17 @@ const BodyMetrics = () => {
                                   if (!value || ['id', 'user_id', 'date', 'created_at', 'notes'].includes(key)) return null
                                   
                                   return (
-                                    <Typography key={key} variant="body2" color="text.secondary">
+                                    <Box 
+                                      key={key}
+                                      component="span"
+                                      sx={{ 
+                                        fontSize: '0.875rem',
+                                        color: 'text.secondary',
+                                        lineHeight: 1.4
+                                      }}
+                                    >
                                       {labels[key]}: {value}cm
-                                    </Typography>
+                                    </Box>
                                   )
                                 })}
                               </Box>

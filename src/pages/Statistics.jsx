@@ -886,14 +886,23 @@ const Statistics = () => {
                     Equilibrio Muscolare
                   </Typography>
                 </Box>
-                <List>
-                  {Object.entries(stats.strengthBalance).map(([group, strength], index) => (
+                <List>                  {Object.entries(stats.strengthBalance).map(([group, strength], index) => (
                     <ListItem key={group}>
                       <ListItemText
+                        primaryTypographyProps={{ component: 'div' }}
+                        secondaryTypographyProps={{ component: 'div' }}
                         primary={
-                          <Typography variant="subtitle1" color="text.primary">
+                          <Box 
+                            component="span"
+                            sx={{ 
+                              fontSize: '1rem',
+                              fontWeight: 500,
+                              color: 'text.primary',
+                              lineHeight: 1.5
+                            }}
+                          >
                             {group}
-                          </Typography>
+                          </Box>
                         }
                         secondary={
                           <Box display="flex" alignItems="center" mt={1}>
@@ -906,9 +915,16 @@ const Statistics = () => {
                                 mr: 2
                               }} 
                             />
-                            <Typography variant="body2" color="text.secondary">
+                            <Box 
+                              component="span"
+                              sx={{ 
+                                fontSize: '0.875rem',
+                                color: 'text.secondary',
+                                lineHeight: 1.4
+                              }}
+                            >
                               {strength}kg
-                            </Typography>
+                            </Box>
                           </Box>
                         }
                       />
@@ -930,19 +946,35 @@ const Statistics = () => {
                   Movimenti Dominanti
                 </Typography>
               </Box>
-              <List>
-                {stats.dominantMovements.slice(0, 5).map((movement, index) => (
+              <List>                {stats.dominantMovements.slice(0, 5).map((movement, index) => (
                   <ListItem key={movement.movement}>
                     <ListItemText
+                      primaryTypographyProps={{ component: 'div' }}
+                      secondaryTypographyProps={{ component: 'div' }}
                       primary={
-                        <Typography variant="subtitle1" color="text.primary">
+                        <Box 
+                          component="span"
+                          sx={{ 
+                            fontSize: '1rem',
+                            fontWeight: 500,
+                            color: 'text.primary',
+                            lineHeight: 1.5
+                          }}
+                        >
                           {movement.movement}
-                        </Typography>
+                        </Box>
                       }
                       secondary={
-                        <Typography variant="body2" color="text.secondary">
+                        <Box 
+                          component="span"
+                          sx={{ 
+                            fontSize: '0.875rem',
+                            color: 'text.secondary',
+                            lineHeight: 1.4
+                          }}
+                        >
                           {movement.count} sessioni
-                        </Typography>
+                        </Box>
                       }
                     />
                     <Typography variant="h6" fontWeight="bold" 
@@ -1162,17 +1194,33 @@ const Statistics = () => {
                         <DumbbellIcon sx={{ color: colors.primary.main }} /> : 
                         <ClockIcon sx={{ color: colors.primary.main }} />
                       }
-                    </ListItemIcon>
-                    <ListItemText
+                    </ListItemIcon>                    <ListItemText
+                      primaryTypographyProps={{ component: 'div' }}
+                      secondaryTypographyProps={{ component: 'div' }}
                       primary={
-                        <Typography variant="subtitle1" color="text.primary">
+                        <Box 
+                          component="span"
+                          sx={{ 
+                            fontSize: '1rem',
+                            fontWeight: 500,
+                            color: 'text.primary',
+                            lineHeight: 1.5
+                          }}
+                        >
                           {pr.name}
-                        </Typography>
+                        </Box>
                       }
                       secondary={
-                        <Typography variant="body2" color="text.secondary">
+                        <Box 
+                          component="span"
+                          sx={{ 
+                            fontSize: '0.875rem',
+                            color: 'text.secondary',
+                            lineHeight: 1.4
+                          }}
+                        >
                           {new Date(pr.date).toLocaleDateString('it-IT')}
-                        </Typography>
+                        </Box>
                       }
                     />
                     <Box textAlign="right">

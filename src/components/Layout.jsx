@@ -16,7 +16,10 @@ import {
   useTheme,
   Divider,
   Avatar,
-  Tooltip
+  Tooltip,
+  CircularProgress,
+  Alert,
+  Snackbar
 } from '@mui/material'
 import {
   Home as HomeIcon,
@@ -31,8 +34,11 @@ import {
 import { colors, commonStyles } from '../theme'
 
 const Layout = ({ children, activeTab, setActiveTab }) => {
-  const { user, signOut } = useAuth()
+  const { user, signOut, loading } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [logoutLoading, setLogoutLoading] = useState(false)
+  const [logoutError, setLogoutError] = useState('')
+  const [logoutSuccess, setLogoutSuccess] = useState(false)
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: HomeIcon },
@@ -43,7 +49,35 @@ const Layout = ({ children, activeTab, setActiveTab }) => {
   ]
 
   const handleSignOut = async () => {
-    await signOut()
+    try {
+      setLogoutLoading(true)
+      setLogoutError('')
+      
+      console.log('Avviando processo di logout...')
+      
+      const { error } = await signOut()
+      
+      if (error) {
+        console.error('Errore durante il logout:', error)
+        setLogoutError(`Errore durante il logout: ${error.message}`)
+      } else {
+        console.log('Logout completato con successo')
+        setLogoutSuccess(true)
+        // Force page reload as fallback
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+      }
+    } catch (e) {
+      console.error('Errore non gestito durante il logout:', e)
+      setLogoutError('Errore durante il logout. Ricaricamento pagina...')
+      // Force page reload as last resort
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
+    } finally {
+      setLogoutLoading(false)
+    }
   }
 
   const theme = useTheme()
@@ -101,13 +135,58 @@ const Layout = ({ children, activeTab, setActiveTab }) => {
             </Typography>
           )}
           
-          <Tooltip title="Logout">
-            <IconButton color="inherit" onClick={handleSignOut}>
-              <LogoutIcon />
+          <Tooltip title={logoutLoading ? "Logout in corso..." : "Logout"}>
+            <IconButton 
+              color="inherit" 
+              onClick={handleSignOut}
+              disabled={logoutLoading}
+              sx={{
+                position: 'relative',
+                '&:disabled': {
+                  color: 'rgba(255, 255, 255, 0.5)',
+                }
+              }}
+            >
+              {logoutLoading ? (
+                <CircularProgress size={24} sx={{ color: 'inherit' }} />
+              ) : (
+                <LogoutIcon />
+              )}
             </IconButton>
           </Tooltip>
         </Toolbar>
       </AppBar>
+
+      {/* Snackbars for feedback */}
+      <Snackbar
+        open={!!logoutError}
+        autoHideDuration={6000}
+        onClose={() => setLogoutError('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setLogoutError('')} 
+          severity="error" 
+          sx={{ width: '100%' }}
+        >
+          {logoutError}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={logoutSuccess}
+        autoHideDuration={3000}
+        onClose={() => setLogoutSuccess(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setLogoutSuccess(false)} 
+          severity="success" 
+          sx={{ width: '100%' }}
+        >
+          Logout completato con successo!
+        </Alert>
+      </Snackbar>
 
       {/* Sidebar */}
       <Drawer
@@ -159,6 +238,7 @@ const Layout = ({ children, activeTab, setActiveTab }) => {
                 <ListItemText 
                   primary={item.name} 
                   primaryTypographyProps={{
+                    component: 'span',
                     fontWeight: activeTab === item.id ? 600 : 400,
                     color: activeTab === item.id ? colors.primary.main : 'rgba(255, 255, 255, 0.8)',
                   }}
@@ -166,6 +246,50 @@ const Layout = ({ children, activeTab, setActiveTab }) => {
               </ListItemButton>
             ))}
           </List>
+          
+          {/* User info and logout in sidebar (mobile) */}
+          {isMobile && (
+            <>
+              <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+              <Box sx={{ px: 2, py: 1 }}>
+                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}>
+                  {user?.email}
+                </Typography>
+                <ListItemButton
+                  onClick={handleSignOut}
+                  disabled={logoutLoading}
+                  sx={{
+                    borderRadius: 1,
+                    color: logoutLoading ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.8)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    },
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 40,
+                      color: logoutLoading ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.7)',
+                    }}
+                  >
+                    {logoutLoading ? (
+                      <CircularProgress size={20} sx={{ color: 'inherit' }} />
+                    ) : (
+                      <LogoutIcon />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={logoutLoading ? "Logout..." : "Logout"}
+                    primaryTypographyProps={{
+                      component: 'span',
+                      fontWeight: 400,
+                      color: logoutLoading ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.8)',
+                    }}
+                  />
+                </ListItemButton>
+              </Box>
+            </>
+          )}
         </Box>
       </Drawer>
 
